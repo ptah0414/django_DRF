@@ -4,16 +4,16 @@ from rest_framework.response import Response
 
 from product.models import Product
 from review.models import Review
-from review.serializers import ReviewSerializers
+from review.serializers import ReviewSerializer
 
 class ReviewList(APIView):
     def get(self, request):
         qs = Review.objects.all()
-        serializer = ReviewSerializers(qs, many=True)
+        serializer = ReviewSerializer(qs, many=True)
         return Response(serializer.data)
 
     def post(self, request, pid):
-        serializer = ReviewSerializers(data=request.data, many=False)
+        serializer = ReviewSerializer(data=request.data, many=False)
 
         if serializer.is_valid():
             product = Product()
@@ -28,12 +28,12 @@ class ReviewList(APIView):
 class ReviewDetail(APIView):
     def get(self, request, pid, rid):
         qs = Review.objects.get(id=rid)
-        serializer = ReviewSerializers(qs, many=False)
+        serializer = ReviewSerializer(qs, many=False)
         return Response(serializer.data)
 
     def patch(self, request, pid, rid):
         qs = Review.objects.get(id=rid)
-        serializer = ReviewSerializers(qs, data=request.data, partial=True)
+        serializer = ReviewSerializer(qs, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
