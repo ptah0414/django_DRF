@@ -1,16 +1,11 @@
 from rest_framework import serializers
 
 from product.models import Product
-
+from review.serializers import ReviewSerializers
 
 class ProductSerializers(serializers.ModelSerializer):
-
+    review_set = ReviewSerializers(many=True, read_only=True) # 리뷰는 등록 안해도 되게 read_only
+    review_count = serializers.IntegerField(source='review_set.count', read_only=True)
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', ]
-    #
-    # def save(self): # save 메소드 오버라이드하기
-    #     name = self.validated_data['name']
-    #     description = self.validated_data['description']
-    #     price = self.validated_data['price']
-    #     seller = self.context['request'].user # 로그인한 user를 받아옴
+        fields = ['name', 'description', 'price', 'review_set', 'review_count']
